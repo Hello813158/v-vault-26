@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Heart Vault ❤️</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #ff0054;
+            --soft-pink: #ffccd5;
+            --desk-bg: radial-gradient(circle, #1a0005 0%, #000 100%);
+        }
+
+        body, html {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden;
+            background: #fff0f3;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* --- BACKGROUND PETALS --- */
+        .petal { position: absolute; top: -10%; z-index: 1; pointer-events: none; animation: fall linear infinite; }
+        @keyframes fall { 0% { transform: translateY(0) rotate(0deg); opacity: 1; } 100% { transform: translateY(110vh) rotate(360deg); opacity: 0; } }
+
+        /* --- VAULT PAGE --- */
+        #vault-page {
+            position: absolute;
+            width: 100%; height: 100%;
+            background: radial-gradient(circle at center, #fff0f3 0%, #ffb3c1 100%);
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            text-align: center; z-index: 10;
+        }
+
+        .heart-glow {
+            position: absolute; width: 250px; height: 250px;
+            background: var(--primary); filter: blur(70px);
+            opacity: 0.35; border-radius: 50%;
+            animation: breathGlow 3s infinite alternate;
+        }
+
+        @keyframes breathGlow { from { transform: scale(1); opacity: 0.3; } to { transform: scale(1.5); opacity: 0.6; } }
+
+        .heart-wrapper { position: relative; width: 300px; height: 300px; display: flex; justify-content: center; align-items: center; z-index: 5; }
+        .main-heart { font-size: 200px; position: absolute; filter: drop-shadow(0 0 30px rgba(255, 0, 84, 0.5)); animation: pulse 1.5s infinite ease-in-out; transition: all 0.8s ease-in; }
+        #lock-icon { position: relative; z-index: 6; font-size: 50px; margin-top: 20px;}
+        #flying-key { position: absolute; font-size: 45px; opacity: 0; z-index: 10; transition: all 0.6s ease-in; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
+        .heart-zoom { transform: scale(45) !important; opacity: 0 !important; }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.3); backdrop-filter: blur(15px);
+            padding: 25px; border-radius: 40px; border: 2px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 15px 35px rgba(255, 0, 84, 0.1); z-index: 20;
+        }
+
+        #passcode { padding: 12px; width: 200px; border-radius: 30px; border: 2px solid transparent; text-align: center; outline: none; }
+
+        /* --- CENTERED CARDS --- */
+        .card {
+            background: rgba(255, 255, 255, 0.95); padding: 40px; border-radius: 35px;
+            box-shadow: 0 20px 50px rgba(255, 0, 84, 0.2);
+            max-width: 450px; width: 90%; position: absolute;
+            top: 50%; left: 50%; transform: translate(-50%, -50%);
+            z-index: 50; display: none; text-align: center;
+            animation: fadeIn 0.5s ease forwards;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translate(-50%, -48%); } to { opacity: 1; transform: translate(-50%, -50%); } }
+
+        h1 { font-family: 'Dancing Script', cursive; color: var(--primary); font-size: 2.2rem; margin: 0 0 20px 0; }
+        p { line-height: 1.6; color: #444; margin-bottom: 30px; }
+
+        /* --- BUTTONS --- */
+        .btn-container { display: flex; justify-content: center; gap: 15px; }
+        button { padding: 12px 30px; border-radius: 50px; border: none; font-weight: 600; cursor: pointer; transition: 0.3s; font-family: 'Poppins'; }
+        .btn-yes { background: var(--primary); color: white; border: 2px solid var(--primary); }
+        .btn-no { background: white; border: 2px solid var(--primary); color: var(--primary); }
+        .btn-option { background: white; border: 2px solid var(--primary); color: var(--primary); display: block; width: 100%; margin: 10px 0; }
+        .btn-option:hover { background: var(--primary); color: white; }
+
+        /* --- MEMORY LANE (CURVED STRING) --- */
+        #memory-lane {
+            display: none; width: 100vw; height: 100vh; position: fixed; top: 0; left: 0;
+            background: linear-gradient(to bottom, #ffccd5, #fff0f3, #cde9ff);
+            flex-direction: column; align-items: center; z-index: 100; padding-top: 50px;
+        }
+        .string-container { position: relative; width: 85%; height: 250px; margin-top: 60px; display: flex; justify-content: center; }
+        .string {
+            width: 100%; height: 100%; border: solid 3px #7a5c4d;
+            border-color: transparent transparent #7a5c4d transparent;
+            border-radius: 0 0 50% 50% / 0 0 100% 100%;
+            position: absolute; top: -120px; display: flex; justify-content: space-around; align-items: flex-end; padding-bottom: 10px;
+        }
+        .polaroid-container { display: flex; flex-direction: column; align-items: center; transition: 0.3s; }
+        .p1 { transform: translateY(-40px) rotate(-8deg); }
+        .p2 { transform: translateY(10px) rotate(-3deg); }
+        .p3 { transform: translateY(10px) rotate(3deg); }
+        .p4 { transform: translateY(-40px) rotate(8deg); }
+        .polaroid-container:hover { transform: translateY(10px) scale(1.05); z-index: 20; }
+        .clip { width: 12px; height: 30px; background: #d2b48c; border-radius: 2px; z-index: 10; box-shadow: 1px 1px 3px rgba(0,0,0,0.2); }
+        .polaroid { background: white; padding: 8px 8px 25px 8px; box-shadow: 0 8px 15px rgba(0,0,0,0.1); cursor: pointer; width: 110px; margin-top: -5px; }
+        .photo-box { height: 100px; width: 100%; background-color: #ffe5ec; background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; font-size: 25px; }
+        .polaroid-caption { font-family: 'Dancing Script', cursive; margin-top: 5px; color: #333; font-size: 0.9rem; }
+
+        /* --- MODAL --- */
+        #letter-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 500; justify-content: center; align-items: center; }
+        .paper { background: #fffdf5; padding: 40px; width: 85%; max-width: 400px; border-radius: 2px; border-left: 30px solid #f0e6d2; }
+        .shake { animation: cardShake 0.4s ease-in-out; }
+        @keyframes cardShake { 0%, 100% { transform: translate(-50%, -50%); } 25% { transform: translate(-52%, -50%); } 75% { transform: translate(-48%, -50%); } }
+    </style>
+</head>
+<body>
+
+    <div id="vault-page">
+        <div class="heart-glow"></div>
+        <div class="heart-wrapper">
+            <div id="flying-key">🔑</div>
+            <div class="main-heart" id="heart-icon">❤️</div>
+            <div id="lock-icon">🔒</div>
+        </div>
+        <div class="glass-panel" id="input-ui">
+            <h1 style="font-size: 1.8rem;">Unlock My Heart</h1>
+            <input type="password" id="passcode" placeholder="Enter Code..." autocomplete="off">
+            <br><br>
+            <button onclick="checkVault()" class="btn-yes" style="width: 100%;">OPEN</button>
+            <p id="vault-hint" style="font-size: 0.8rem; color: var(--primary); margin-top: 10px;"></p>
+        </div>
+    </div>
+
+    <div id="question-section" class="card">
+        <h1>Will you be mine?</h1>
+        <p>"Life is an incredible journey and i want to spend every second of it with you"</p>
+        <div class="btn-container">
+            <button class="btn-yes" onclick="nextStage('wish-section')">Yes!</button>
+            <button class="btn-no" id="no-btn" onmouseover="moveNo()">No</button>
+        </div>
+    </div>
+
+    <div id="wish-section" class="card">
+        <h1>Happy Valentines Day!🥹🎀</h1>
+        <p>Every second i spend with you makes me feel so special, thankyou❤️</p>
+        <button class="btn-yes" onclick="nextStage('quiz-1')">The Quiz →</button>
+    </div>
+
+    <div id="quiz-1" class="card">
+        <h1>Quiz 😚</h1>
+        <p>Who is the boss of the relationship?</p>
+        <button class="btn-option" onclick="wrongAnswer('quiz-1', this)">Obviously Me</button>
+        <button class="btn-option" onclick="nextStage('quiz-2')">Obviously You</button>
+        <button class="btn-option" onclick="wrongAnswer('quiz-1', this)">None of us</button>
+    </div>
+
+    <div id="quiz-2" class="card">
+        <h1>Quiz 😚</h1>
+        <p>Who fights a lot in the relationship?</p>
+        <button class="btn-option" onclick="nextStage('quiz-history-1')">Me</button>
+        <button class="btn-option" onclick="wrongAnswer('quiz-2', this)">You</button>
+        <button class="btn-option" onclick="wrongAnswer('quiz-2', this)">Us</button>
+    </div>
+
+    <div id="quiz-history-1" class="card">
+        <h1>Memory Lane 🕰️</h1>
+        <p>When did we meet for the first time?</p>
+        <button class="btn-option" onclick="wrongAnswer('quiz-history-1', this)">5th Feb 2024</button>
+        <button class="btn-option" onclick="nextStage('quiz-history-2')">28th May 2024</button>
+        <button class="btn-option" onclick="wrongAnswer('quiz-history-1', this)">27th May 2024</button>
+    </div>
+
+    <div id="quiz-history-2" class="card">
+        <h1>Memory Lane 🕰️</h1>
+        <p>At what time did we start talking?</p>
+        <button class="btn-option" onclick="wrongAnswer('quiz-history-2', this)">12:05 a.m.</button>
+        <button class="btn-option" onclick="nextStage('quiz-final')">12:21 a.m.</button>
+        <button class="btn-option" onclick="wrongAnswer('quiz-history-2', this)">12:17 a.m.</button>
+    </div>
+
+    <div id="quiz-final" class="card">
+        <h1>Final One...</h1>
+        <p>Who is the most loving?</p>
+        <button class="btn-option" onclick="wrongAnswer('quiz-final', this)">Me</button>
+        <button class="btn-option" onclick="wrongAnswer('quiz-final', this)">You</button>
+        <button class="btn-option" onclick="nextStage('celebration')">Us</button>
+    </div>
+
+    <div id="celebration" class="card">
+        <div style="font-size: 50px;">😭❤️</div>
+        <h1>You passed!</h1>
+        <p>You really do remember everything... I love you!</p>
+        <button class="btn-yes" onclick="showMemoryLane()">See My Memories →</button>
+    </div>
+
+    <div id="memory-lane">
+        <h1 style="color:var(--primary); font-family:'Dancing Script'; font-size: 3rem;">Our Memories🥹</h1>
+        <div class="string-container">
+            <div class="string">
+                <div class="polaroid-container p1">
+                    <div class="clip"></div>
+                    <div class="polaroid" onclick="openLetter('Our Laughs', 'Your text about laughing together...')">
+                        <div class="photo-box">📸</div>
+                        <div class="polaroid-caption">Our Funny Moments🥹</div>
+                    </div>
+                </div>
+                <div class="polaroid-container p2">
+                    <div class="clip"></div>
+                    <div class="polaroid" onclick="openLetter('Deep Talks', 'Your text about late nights...')">
+                        <div class="photo-box">🌙</div>
+                        <div class="polaroid-caption">Your favourite🥰</div>
+                    </div>
+                </div>
+                <div class="polaroid-container p3">
+                    <div class="clip"></div>
+                    <div class="polaroid" onclick="openLetter('Strength', 'Your text about your bond...')">
+                        <div class="photo-box">🥊</div>
+                        <div class="polaroid-caption">Our Strengths💪</div>
+                    </div>
+                </div>
+                <div class="polaroid-container p4">
+                    <div class="clip"></div>
+                    <div class="polaroid" onclick="openLetter('Forever', 'Your final promise...')">
+                        <div class="photo-box">💍</div>
+                        <div class="polaroid-caption">Our Forever Promises🎀🧿</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button class="btn-yes" onclick="location.reload()" style="position: absolute; bottom: 40px; width: auto;">Start Over</button>
+    </div>
+
+    <div id="letter-modal">
+        <div class="paper">
+            <h2 id="ltitle" style="color:var(--primary); font-family:'Dancing Script'; margin:0;"></h2>
+            <div id="lbody" style="line-height: 1.6; font-family: 'Poppins'; white-space: pre-wrap; margin-top:15px;"></div>
+            <button class="btn-yes" style="width: auto; margin-top: 20px;" onclick="document.getElementById('letter-modal').style.display='none'">Close</button>
+        </div>
+    </div>
+
+    <script>
+        const CODE = "1234";
+
+        function createPetal() {
+            const petal = document.createElement('div');
+            petal.innerHTML = "🌸"; petal.className = 'petal';
+            petal.style.left = Math.random() * 100 + 'vw';
+            petal.style.fontSize = Math.random() * 20 + 10 + 'px';
+            petal.style.animationDuration = Math.random() * 3 + 3 + 's';
+            document.body.appendChild(petal);
+            setTimeout(() => petal.remove(), 6000);
+        }
+        setInterval(createPetal, 450);
+
+        document.getElementById('passcode').addEventListener('input', function() {
+            const heart = document.getElementById('heart-icon');
+            heart.style.animation = this.value.length > 0 ? "pulse 0.5s infinite ease-in-out" : "pulse 1.5s infinite ease-in-out";
+        });
+
+        function checkVault() {
+            const val = document.getElementById('passcode').value;
+            if(val === CODE) {
+                document.getElementById('flying-key').style.opacity = "1";
+                document.getElementById('flying-key').style.transform = "translateY(50px) scale(1.2)";
+                setTimeout(() => {
+                    document.getElementById('lock-icon').innerHTML = "🔓";
+                    setTimeout(() => {
+                        document.getElementById('heart-icon').classList.add('heart-zoom');
+                        document.getElementById('input-ui').style.opacity = "0";
+                        setTimeout(() => {
+                            document.getElementById('vault-page').style.display = 'none';
+                            document.getElementById('question-section').style.display = 'block';
+                        }, 800);
+                    }, 500);
+                }, 600);
+            } else {
+                document.getElementById('vault-page').classList.add('shake');
+                setTimeout(() => document.getElementById('vault-page').classList.remove('shake'), 400);
+            }
+        }
+
+        function nextStage(id) {
+            document.querySelectorAll('.card').forEach(c => c.style.display = 'none');
+            document.getElementById(id).style.display = 'block';
+        }
+
+        function wrongAnswer(stageId, btn) {
+            document.getElementById(stageId).classList.add('shake');
+            btn.style.backgroundColor = "#ffe5ec";
+            setTimeout(() => document.getElementById(stageId).classList.remove('shake'), 400);
+        }
+
+        function moveNo() {
+            const btn = document.getElementById('no-btn');
+            btn.style.position = 'fixed';
+            btn.style.left = Math.random() * 70 + 'vw';
+            btn.style.top = Math.random() * 70 + 'vh';
+        }
+
+        function showMemoryLane() {
+            document.getElementById('celebration').style.display = 'none';
+            document.getElementById('memory-lane').style.display = 'flex';
+        }
+
+        function openLetter(t, b) {
+            document.getElementById('ltitle').innerText = t;
+            document.getElementById('lbody').innerText = b;
+            document.getElementById('letter-modal').style.display = 'flex';
+        }
+    </script>
+</body>
+</html>
