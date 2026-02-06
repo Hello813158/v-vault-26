@@ -15,6 +15,8 @@
             --accent-pink: #ffb7b7;
             --text-color-alt: #3d3d3d;
             --btn-text: #6b414a;
+            --envelope-red: #d00000;
+            --letter-paper: #fff9ec;
         }
 
         body, html {
@@ -25,19 +27,13 @@
         }
 
         /* --- FALLING ELEMENTS --- */
-        .petal { 
-            position: fixed; 
-            top: -10%; 
-            z-index: 999; 
-            pointer-events: none; 
-            animation: fall linear infinite; 
-        }
+        .petal { position: fixed; top: -10%; z-index: 999; pointer-events: none; animation: fall linear infinite; }
         @keyframes fall { 
             0% { transform: translateY(0) rotate(0deg) translateX(0); opacity: 1; } 
             100% { transform: translateY(110vh) rotate(360deg) translateX(50px); opacity: 0; } 
         }
 
-        /* --- VAULT & CARDS --- */
+        /* --- VAULT PAGE --- */
         #vault-page {
             position: absolute; width: 100%; height: 100%;
             background: radial-gradient(circle at center, #fff0f3 0%, #ffb3c1 100%);
@@ -56,9 +52,10 @@
         .glass-panel { background: rgba(255, 255, 255, 0.3); backdrop-filter: blur(15px); padding: 25px; border-radius: 40px; border: 2px solid rgba(255, 255, 255, 0.5); z-index: 20; }
         #passcode { padding: 12px; width: 200px; border-radius: 30px; border: 2px solid transparent; text-align: center; outline: none; }
 
+        /* --- CARDS --- */
         .card { background: rgba(255, 255, 255, 0.95); padding: 40px; border-radius: 35px; box-shadow: 0 20px 50px rgba(255, 0, 84, 0.2); max-width: 450px; width: 90%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 50; display: none; text-align: center; }
-        h1 { font-family: 'Dancing Script', cursive; color: var(--primary); font-size: 2.2rem; margin-bottom: 20px; }
-        p { line-height: 1.6; color: #444; margin-bottom: 30px; }
+        h1 { font-family: 'Dancing Script', cursive; color: var(--primary); font-size: 2.2rem; margin-bottom: 10px; }
+        p { line-height: 1.6; color: #444; margin-bottom: 20px; }
 
         .btn-container { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
         button { padding: 12px 30px; border-radius: 50px; border: none; font-weight: 600; cursor: pointer; transition: 0.3s; font-family: 'Poppins'; }
@@ -80,11 +77,45 @@
         .clip-alt { position: absolute; top: -18px; left: 50%; transform: translateX(-50%); width: 35px; height: 35px; background-color: #ffffff; border-radius: 50%; z-index: 3; display: flex; justify-content: center; align-items: center; }
         .clip-alt::after { content: '❤'; color: #ff7b9c; font-size: 18px; }
         .gift-button { display: block; width: fit-content; margin: 20px auto 0; padding: 12px 24px; background: var(--accent-pink); color: var(--btn-text); border-radius: 25px; font-weight: bold; border: none; cursor: pointer; }
-        .confetti { position: fixed; font-size: 24px; pointer-events: none; z-index: 999; animation: fall linear forwards; }
+        .confetti { position: fixed; font-size: 24px; pointer-events: none; z-index: 1001; animation: fall linear forwards; }
         @keyframes sway { 0% { transform: rotate(calc(var(--rotation) - 1deg)); } 100% { transform: rotate(calc(var(--rotation) + 1deg)); } }
+
+        /* --- LETTERS PAGE --- */
+        #letters-page { 
+            display: none; background: #ff4d6d; 
+            background-image: radial-gradient(circle, #ff4d6d 0%, #c9184a 100%);
+            min-height: 100vh; width: 100%; position: absolute; 
+            flex-direction: column; align-items: center; padding: 50px 0; z-index: 300; 
+        }
+        .envelope-wrapper { margin: 25px 0; position: relative; width: 280px; height: 180px; cursor: pointer; perspective: 1000px; }
+        .envelope-base { position: absolute; width: 100%; height: 100%; background: var(--envelope-red); z-index: 2; box-shadow: 0 10px 20px rgba(0,0,0,0.3); border-radius: 0 0 10px 10px; }
+        .envelope-flap { 
+            position: absolute; top: 0; left: 0; width: 0; height: 0; 
+            border-left: 140px solid transparent; border-right: 140px solid transparent; 
+            border-top: 100px solid #a00000; z-index: 4; 
+            transform-origin: top; transition: transform 0.5s ease; 
+        }
+        .letter-paper { 
+            position: absolute; bottom: 5px; left: 10px; width: 260px; height: 160px; 
+            background: var(--letter-paper); padding: 20px; box-sizing: border-box; 
+            transition: all 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 3; 
+            font-family: 'Dancing Script', cursive; color: #333; overflow: hidden; 
+            box-shadow: 0 0 10px rgba(0,0,0,0.1); border-radius: 5px;
+        }
+        
+        .envelope-wrapper.open .envelope-flap { transform: rotateX(180deg); z-index: 1; }
+        .envelope-wrapper.open .letter-paper { 
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+            width: 90vw; height: 85vh; z-index: 1000; padding: 40px 25px; 
+            overflow-y: auto; border-radius: 15px; font-size: 1.3rem; 
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+        }
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 999; display: none; backdrop-filter: blur(8px); }
     </style>
 </head>
 <body>
+
+    <div class="overlay" onclick="closeAllLetters()"></div>
 
     <div id="vault-page">
         <div class="heart-glow"></div>
@@ -93,7 +124,7 @@
             <div class="main-heart" id="heart-icon">❤️</div>
             <div id="lock-icon">🔒</div>
         </div>
-        <div class="glass-panel" id="input-ui">
+        <div class="glass-panel">
             <h1 style="font-size: 1.8rem;">Unlock My Heart</h1>
             <input type="password" id="passcode" placeholder="Enter Code..." autocomplete="off">
             <br><br>
@@ -165,16 +196,46 @@
 
     <div id="hanging-timeline">
         <h1 style="color: white; z-index: 10; font-family: 'Dancing Script';">For My Girl ❤️</h1>
-        <div class="polaroid-wrapper"><div class="clip-alt"></div><div class="hanging-polaroid"><img src="YOUR_IMAGE_1" alt="First Photo🎀"><div style="text-align:center; margin-top:15px; font-weight:bold; color:var(--text-color-alt);">The beginning ✨</div><button class="gift-button" onclick="createHearts()">A little surprise</button></div></div>
-        <div class="polaroid-wrapper"><div class="clip-alt"></div><div class="hanging-polaroid"><img src="YOUR_IMAGE_2" alt="Best Photo🧿"><div style="text-align:center; margin-top:15px; font-weight:bold; color:var(--text-color-alt);">Favorite Moment 🥰</div><button class="gift-button" onclick="createHearts()">Surprise!</button></div></div>
-        <div class="polaroid-wrapper"><div class="clip-alt"></div><div class="hanging-polaroid"><img src="YOUR_IMAGE_3" alt="Latest Photo🥰"><div style="text-align:center; margin-top:15px; font-weight:bold; color:var(--text-color-alt);">Forever to go...</div><button class="gift-button" id="final-btn" onclick="celebrate()">The Big Prize 🎁</button></div></div>
+        <div class="polaroid-wrapper"><div class="clip-alt"></div><div class="hanging-polaroid"><img src="YOUR_IMAGE_URL_1"><div style="text-align:center; margin-top:15px; font-weight:bold; color:var(--text-color-alt);">The beginning ✨</div><button class="gift-button" onclick="createHearts()">A little surprise</button></div></div>
+        <div class="polaroid-wrapper"><div class="clip-alt"></div><div class="hanging-polaroid"><img src="YOUR_IMAGE_URL_2"><div style="text-align:center; margin-top:15px; font-weight:bold; color:var(--text-color-alt);">Favorite Moment 🥰</div><button class="gift-button" onclick="createHearts()">Surprise!</button></div></div>
+        <div class="polaroid-wrapper"><div class="clip-alt"></div><div class="hanging-polaroid"><img src="YOUR_IMAGE_URL_3"><div style="text-align:center; margin-top:15px; font-weight:bold; color:var(--text-color-alt);">Forever to go...</div><button class="gift-button" id="final-btn" onclick="celebrate()">The Big Prize 🎁</button></div></div>
+        
+        <button id="nav-to-letters" class="btn-yes" style="display:none; margin: 40px 0; background: white; color: var(--primary); z-index: 10;" onclick="showLetters()">Open My Letters 💌</button>
+    </div>
+
+    <div id="letters-page">
+        <button class="btn-yes" onclick="showHangingTimeline()" style="background: rgba(255,255,255,0.2); border: 1px solid white; margin-bottom: 20px; font-size: 0.8rem;">← Back to Gallery</button>
+        
+        <h1 style="color: white; font-family: 'Dancing Script'; font-size: 3rem; margin-bottom: 30px;">For You</h1>
+        
+        <div class="envelope-wrapper" onclick="toggleLetter(this)">
+            <div class="envelope-flap"></div><div class="envelope-base"></div>
+            <div class="letter-paper"><h3>Letter #1</h3>Write your heart out here...</div>
+        </div>
+
+        <div class="envelope-wrapper" onclick="toggleLetter(this)">
+            <div class="envelope-flap"></div><div class="envelope-base"></div>
+            <div class="letter-paper"><h3>Letter #2</h3>Something special...</div>
+        </div>
+
+        <div class="envelope-wrapper" onclick="toggleLetter(this)">
+            <div class="envelope-flap"></div><div class="envelope-base"></div>
+            <div class="letter-paper"><h3>Letter #3</h3>A sweet memory...</div>
+        </div>
+
+        <div class="envelope-wrapper" onclick="toggleLetter(this)">
+            <div class="envelope-flap"></div><div class="envelope-base"></div>
+            <div class="letter-paper"><h3>Letter #4</h3>Our future...</div>
+        </div>
+
+        <button class="btn-yes" onclick="location.reload()" style="background: white; color: var(--primary); margin: 50px;">Restart ❤️</button>
     </div>
 
     <script>
         const CODE = "1234";
 
         function createFallingElement() {
-            const elements = ['🌸', '🌹', '🌷', '✨'];
+            const elements = ['🌸', '🌹', '🌷', '✨', '❤️'];
             const el = document.createElement('div');
             el.innerHTML = elements[Math.floor(Math.random() * elements.length)];
             el.className = 'petal';
@@ -224,8 +285,60 @@
         }
 
         function showHangingTimeline() {
-            document.getElementById('celebration').style.display = 'none';
-            document.getElementById('hanging-timeline').style.display = 'flex';
+            // Hide everything else
+            document.querySelectorAll('.card').forEach(c => c.style.display = 'none');
+            document.getElementById('letters-page').style.display = 'none';
+            
+            const timeline = document.getElementById('hanging-timeline');
+            timeline.style.display = 'flex';
+            timeline.style.position = 'relative'; 
+            
+            // Unlock scroll
+            document.documentElement.style.overflow = "auto";
+            document.body.style.overflow = "auto";
+            
+            // Snap to top when coming back from letters
+            window.scrollTo(0,0);
+        }
+
+        function showLetters() {
+            // 1. Hide the timeline and lock scroll immediately
+            document.getElementById('hanging-timeline').style.display = 'none';
+            document.documentElement.style.overflow = "hidden";
+            document.body.style.overflow = "hidden";
+
+            // 2. FORCE Scroll Reset
+            window.scrollTo(0, 0);
+            document.body.scrollTop = 0; // For Safari
+            document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+
+            // 3. Show the new page
+            const letters = document.getElementById('letters-page');
+            letters.style.display = 'flex';
+            letters.style.position = 'relative'; 
+            
+            // Small delay to ensure layout has shifted before unlocking
+            setTimeout(() => {
+                document.documentElement.style.overflow = "auto";
+                document.body.style.overflow = "auto";
+                window.scrollTo(0, 0);
+            }, 60);
+        }
+
+        function toggleLetter(el) {
+            const isOpen = el.classList.contains('open');
+            closeAllLetters();
+            if (!isOpen) {
+                el.classList.add('open');
+                document.querySelector('.overlay').style.display = 'block';
+                document.body.style.overflow = "hidden";
+                document.documentElement.style.overflow = "hidden";
+            }
+        }
+
+        function closeAllLetters() {
+            document.querySelectorAll('.envelope-wrapper').forEach(el => el.classList.remove('open'));
+            document.querySelector('.overlay').style.display = 'none';
             document.body.style.overflow = "auto";
             document.documentElement.style.overflow = "auto";
         }
@@ -249,6 +362,7 @@
         function celebrate() {
             for (let i = 0; i < 40; i++) { createHearts(); }
             document.getElementById('final-btn').innerText = "I Love You!";
+            document.getElementById('nav-to-letters').style.display = 'block';
         }
     </script>
 </body>
